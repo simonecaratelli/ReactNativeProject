@@ -5,7 +5,7 @@ import { MainAppScreen } from './src/features/meals/screens/MainAppScreen';
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="auto" />
+      <StatusBar barStyle="default" />
       <MainAppScreen />
     </SafeAreaView>
   );

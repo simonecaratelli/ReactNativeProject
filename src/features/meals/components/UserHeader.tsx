@@ -3,6 +3,7 @@ import { View, Text, Image, Switch, Pressable, StyleSheet } from 'react-native';
 
 interface UserHeaderProps {
   username: string;
+  avatarUri?: string;
   isDarkMode: boolean;
   onToggleTheme: (value: boolean) => void;
   onLogout: () => void;
@@ -10,6 +11,7 @@ interface UserHeaderProps {
 
 export const UserHeader: React.FC<UserHeaderProps> = ({
   username,
+  avatarUri,
   isDarkMode,
   onToggleTheme,
   onLogout,
@@ -25,7 +27,7 @@ export const UserHeader: React.FC<UserHeaderProps> = ({
         ]}
       >
         <Image
-          source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100' }}
+          source={{ uri: avatarUri || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100' }}
           style={styles.avatar}
         />
         <View>

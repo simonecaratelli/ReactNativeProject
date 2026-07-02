@@ -14,25 +14,18 @@ export interface MealDetail {
   [key: string]: string | undefined; 
 }
 
-// Fetch della lista dei piatti Italiani
-export const fetchItalianMeals = async (): Promise<MealSummary[]> => {
-  const response = await fetch('https://www.themealdb.com/api/json/v1/1/filter.php?a=Italian');
-  if (!response.ok) {
-    throw new Error('Errore nel caricamento dei piatti italiani');
-  }
-  const data = await response.json();
-  return data.meals || [];
-};
+const BASE = "https://www.themealdb.com/api/json/v1/1";
 
-// Fetch dei dettagli di una singola ricetta tramite ID
-export const fetchMealDetails = async (id: string): Promise<MealDetail> => {
-  const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
-  if (!response.ok) {
-    throw new Error('Errore nel caricamento del dettaglio della ricetta');
-  }
-  const data = await response.json();
-  if (!data.meals || data.meals.length === 0) {
-    throw new Error('Ricetta non trovata');
-  }
-  return data.meals[0];
-};
+export async function fetchItalianMeals() {
+  const res = await fetch(`${BASE}/filter.php?a=Italian`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  return data.meals ?? [];
+}
+
+export async function fetchMealById(id: string) {
+  const res = await fetch(`${BASE}/lookup.php?i=${id}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  return data.meals?.[0] ?? null;
+}

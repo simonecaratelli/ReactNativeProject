@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ScrollView, Pressable, ActivityIndicator, StyleSheet } from 'react-native';
-import { fetchMealDetails, MealDetail } from '../services/mealsApi';
+import { fetchMealById, MealDetail } from '../services/mealsApi';
 
 interface MealDetailViewProps {
   mealId: string;
@@ -16,8 +16,8 @@ export const MealDetailView: React.FC<MealDetailViewProps> = ({ mealId, onBack, 
     let isMounted = true;
     setStatus('loading');
 
-    fetchMealDetails(mealId)
-      .then((data) => {
+    fetchMealById(mealId)
+      .then((data: MealDetail | null) => {
         if (isMounted) {
           setMeal(data);
           setStatus('success');

@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TextInput, ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 import { fetchItalianMeals, MealSummary } from '../services/mealsApi';
 import { LoginForm } from '../../auth/components/LoginForm';
+import { AuthUser } from '../services/auth';
 import { UserHeader } from '../components/UserHeader';
 import { MealItem } from '../components/MealItem';
 import { MealDetailView } from '../components/MealDetailView';
+import { loadFavoriteIds, loadStoredUser, saveFavoriteIds, saveStoredUser } from '../services/storage';
 
 export const MainAppScreen: React.FC = () => {
-  const [username, setUsername] = useState<string | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -18,10 +20,49 @@ export const MainAppScreen: React.FC = () => {
   const [filterFavoritesOnly, setFilterFavoritesOnly] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!username) return;
+    let isMounted = true;
+
+    Promise.all([loadStoredUser()])
+      .then(([storedUser]) => {
+        if (isMounted) {
+          if (storedUser) {
+            setUser({
+              email: storedUser,
+              password: '',
+              name: storedUser,
+              avatarUri: '',
+            });
+          }
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setFavorites([]);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
 
     let isMounted = true;
     setStatus('loading');
+
+    loadFavoriteIds(user.name)
+      .then((ids) => {
+        if (isMounted) {
+          setFavorites(ids);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setFavorites([]);
+        }
+      });
 
     fetchItalianMeals()
       .then((data) => {
@@ -37,7 +78,16 @@ export const MainAppScreen: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, [username]);
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+    saveFavoriteIds(favorites, user.name);
+  }, [favorites, user]);
+
+  useEffect(() => {
+    saveStoredUser(user?.name ?? null);
+  }, [user]);
 
   const handleToggleFavorite = (id: string) => {
     setFavorites((prev) =>
@@ -46,7 +96,7 @@ export const MainAppScreen: React.FC = () => {
   };
 
   const handleLogout = () => {
-    setUsername(null);
+    setUser(null);
     setSelectedMealId(null);
     setSearchQuery('');
     setFilterFavoritesOnly(false);
@@ -60,14 +110,14 @@ export const MainAppScreen: React.FC = () => {
 
   const themeStyles = isDarkMode ? darkStyles : lightStyles;
 
-  if (!username) {
-    return <LoginForm onLoginSuccess={setUsername} isDarkMode={isDarkMode} />;
+  if (!user) {
+    return <LoginForm onLoginSuccess={setUser} isDarkMode={isDarkMode} />;
   }
 
   if (selectedMealId) {
     return (
       <View style={[styles.root, themeStyles.container]}>
-        <UserHeader username={username} isDarkMode={isDarkMode} onToggleTheme={setIsDarkMode} onLogout={handleLogout} />
+        <UserHeader username={user.name} avatarUri={user.avatarUri} isDarkMode={isDarkMode} onToggleTheme={setIsDarkMode} onLogout={handleLogout} />
         <MealDetailView mealId={selectedMealId} onBack={() => setSelectedMealId(null)} isDarkMode={isDarkMode} />
       </View>
     );
@@ -75,7 +125,7 @@ export const MainAppScreen: React.FC = () => {
 
   return (
     <View style={[styles.root, themeStyles.container]}>
-      <UserHeader username={username} isDarkMode={isDarkMode} onToggleTheme={setIsDarkMode} onLogout={handleLogout} />
+      <UserHeader username={user.name} avatarUri={user.avatarUri} isDarkMode={isDarkMode} onToggleTheme={setIsDarkMode} onLogout={handleLogout} />
 
       <View style={styles.searchContainer}>
         <TextInput

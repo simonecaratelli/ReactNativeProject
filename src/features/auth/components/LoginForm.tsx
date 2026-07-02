@@ -1,31 +1,35 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
+import { AuthUser, validateLogin } from '../../meals/services/auth';
 
 interface LoginFormProps {
-  onLoginSuccess: (username: string) => void;
+  onLoginSuccess: (user: AuthUser) => void;
   isDarkMode: boolean;
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, isDarkMode }) => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = () => {
-    const trimmedUser = username.trim();
+    const trimmedEmail = email.trim();
     const trimmedPass = password.trim();
 
-    if (!trimmedUser || !trimmedPass) {
+    if (!trimmedEmail || !trimmedPass) {
       setError('Tutti i campi sono obbligatori.');
       return;
     }
-    if (trimmedPass.length < 4) {
-      setError('La password deve contenere almeno 4 caratteri.');
+
+    const user = validateLogin(trimmedEmail, trimmedPass);
+
+    if (!user) {
+      setError('Email o password non corretti.');
       return;
     }
 
     setError('');
-    onLoginSuccess(trimmedUser);
+    onLoginSuccess(user);
   };
 
   const themeStyles = isDarkMode ? darkStyles : lightStyles;
@@ -33,7 +37,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, isDarkMode
   return (
     <View style={[styles.container, themeStyles.container]}>
       
-      {/* Intestazione minimalista e spostata verso l'alto */}
       <View style={styles.headerContainer}>
         <Text style={[styles.title, themeStyles.text]}>Italian Meals</Text>
         <Text style={styles.subtitle}>Il gusto della semplicità</Text>
@@ -42,11 +45,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, isDarkMode
       <View style={styles.formContainer}>
         <TextInput
           style={[styles.input, themeStyles.input]}
-          placeholder="Nome Utente"
+          placeholder="Email"
           placeholderTextColor={isDarkMode ? '#8E8E93' : '#AEAEB2'}
-          value={username}
-          onChangeText={setUsername}
+          value={email}
+          onChangeText={setEmail}
           autoCapitalize="none"
+          keyboardType="email-address"
         />
 
         <TextInput
@@ -60,7 +64,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess, isDarkMode
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-        {/* Pulsante in stile iOS (colore blu di sistema ed elegante) */}
         <Pressable style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Accedi</Text>
         </Pressable>
