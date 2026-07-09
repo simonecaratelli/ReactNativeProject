@@ -91,16 +91,22 @@ export const UserHeader: React.FC<UserHeaderProps> = ({
         color: currentTheme.text,
       },
       logoutBtn: {
-        paddingVertical: 6,
-        paddingHorizontal: 10,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: '#FF3B30',
+        paddingVertical: 7,
+        paddingHorizontal: 16,
+        borderRadius: 24, 
+        borderWidth: 0,
+        backgroundColor: isDarkMode ? '#FFFFFF' : '#ff0000',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4,
+        elevation: 2,
       },
       logoutText: {
         fontSize: 12,
-        fontWeight: '600',
-        color: '#FF3B30',
+        fontWeight: '700', 
+        color: isDarkMode ? '#ff0000' : '#FFFFFF',
+        letterSpacing: 0.3,
       },
     }), 
     [isDarkMode]
@@ -138,7 +144,7 @@ export const UserHeader: React.FC<UserHeaderProps> = ({
             accessibilityLabel="Attiva o disattiva tema scuro"
             value={isDarkMode}
             onValueChange={onToggleTheme}
-            trackColor={{ false: "#767577", true: "#34C759" }}
+            trackColor={{ false: "#767577", true: "#fefffe" }}
             thumbColor={isDarkMode ? "#FFFFFF" : "#F4F3F4"}
           />
         </View>
@@ -146,10 +152,13 @@ export const UserHeader: React.FC<UserHeaderProps> = ({
         <Pressable 
           accessibilityRole="button"
           accessibilityLabel="Esegui il logout"
-          style={styles.logoutBtn} 
+          style={({ pressed }) => [
+    styles.logoutBtn,
+    pressed && { opacity: 0.5, transform: [{ scale: 0.97 }] } 
+  ]} 
           onPress={onLogout}
         >
-          <Text style={styles.logoutText}>Esci</Text>
+          <Text style={styles.logoutText}>Logout</Text>
         </Pressable>
       </View>
     </View>

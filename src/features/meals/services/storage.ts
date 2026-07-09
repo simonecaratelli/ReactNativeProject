@@ -21,3 +21,28 @@ export async function saveFavoriteIds(ids: string[]): Promise<void> {
   } catch {
   }
 }
+
+
+
+export const AUTH_USER_KEY = "app:v1:auth_user";
+
+export async function loadPersistedUser(): Promise<any | null> {
+  try {
+    const raw = await AsyncStorage.getItem(AUTH_USER_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+export async function savePersistedUser(user: any | null): Promise<void> {
+  try {
+    if (user) {
+      await AsyncStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
+    } else {
+      await AsyncStorage.removeItem(AUTH_USER_KEY);
+    }
+  } catch {
+  }
+}
