@@ -49,13 +49,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 10,
     paddingRight: 15,
-    borderRadius: 24, // Molto arrotondato
+    borderRadius: 24, 
     overflow: 'hidden',
   },
   image: {
     width: 80,
     height: 80,
-    borderRadius: 20, // Angoli immagine arrotondati
+    borderRadius: 20, 
     margin: 8,
   },
   infoContainer: {
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: '500', // Più leggero
+    fontWeight: '500', 
     letterSpacing: -0.2,
   },
   favButton: {
@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
 const lightStyles = StyleSheet.create({
   card: { 
     backgroundColor: '#FFFFFF',
-    // Ombra molto soffusa
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
