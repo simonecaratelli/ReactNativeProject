@@ -18,7 +18,6 @@ export const UserHeader: React.FC<UserHeaderProps> = ({
 }) => {
   const [avatarFailed, setAvatarFailed] = useState(false);
 
-  // Fallback automatico su Picsum se l'utente non ha una foto definita in auth.ts
   const avatarUri = avatarUrl || `https://picsum.photos/seed/${username}/64`;
 
   const currentTheme = isDarkMode 

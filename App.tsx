@@ -43,9 +43,9 @@ export default function App() {
               {(props) => (
                 <HomeScreen
                   {...props}
-                  username={user.username || user.name || 'Utente'}
-                  avatarUrl={user.avatarUrl || user.avatar || user.image} // Passa l'avatar da auth
-                  setUsername={setUser} // Passerà null per effettuare il logout
+                  username={user.name || user.name || 'Utente'}
+                  avatarUrl={user.avatarUri}
+                  setUsername={setUser} 
                   isDarkMode={isDarkMode}
                   setIsDarkMode={setIsDarkMode}
                 />
