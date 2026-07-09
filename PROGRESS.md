@@ -18,11 +18,11 @@
 | Errore + Retry |  ✅      | ![Errore](./docs/screenshots/08-error.png)          |
 | Deep link      |  ✅       | ![Deep link](./docs/screenshots/09-deeplink.png)    |
 
-## Google Doc (lab 13–22)
+## Google Doc (lab 13–19)
 
 **Link:** https://docs.google.com/document/d/1RXdJJVh4GlMYAngYksM9MLcUvdgkYoO3lizdgMCK36Y/edit?tab=t.0#heading=h.wu29v8o1b6lm
 
-Uno screenshot per lab **13–22** (come avete fatto per i lab **01–11** alla verifica intermedia).
+Uno screenshot per lab **13–19** (come avete fatto per i lab **01–11** alla verifica intermedia).
 
 ## Note
 
